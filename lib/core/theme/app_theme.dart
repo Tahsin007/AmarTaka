@@ -41,6 +41,10 @@ class AppTheme {
         borderRadius: BorderRadius.circular(4.0),
         borderSide: BorderSide(color: AppPallete.errorColor, width: 1.0),
       ),
+                  focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.red, width: 2),
+            ),
     ),
 
     chipTheme: ChipThemeData(

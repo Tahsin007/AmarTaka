@@ -1,3 +1,4 @@
+import 'package:amar_taka/core/theme/app_pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,19 +25,20 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
     Future.delayed(Duration(seconds: 3), () {
-      context.replace('/home');
+      context.replace('/onboard');
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppPallete.primaryColor,
       body: FadeTransition(
         opacity: _animation,
         child: Center(
           child: ScaleTransition(
             scale: _animation,
-            child: Image.asset('assets/images/main-logo.png'),
+            child: Image.asset('assets/images/animated_logo.gif'),
           ),
         ),
       ),
