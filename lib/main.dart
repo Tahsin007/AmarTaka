@@ -1,4 +1,5 @@
 import 'package:amar_taka/core/theme/app_theme.dart';
+import 'package:amar_taka/core/utils/app_router.dart';
 import 'package:amar_taka/init_dependencies.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -15,10 +16,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
       theme: AppTheme.lightTheme,
-      home: const MyHomePage(title: 'AmarTaka'),
+      routerConfig: AppRouter.router,
     );
   }
 }
