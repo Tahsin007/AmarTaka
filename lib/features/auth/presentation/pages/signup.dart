@@ -2,8 +2,12 @@ import 'package:amar_taka/core/common/app_primary_button.dart';
 import 'package:amar_taka/core/common/app_text_field.dart';
 import 'package:amar_taka/core/theme/app_pallete.dart';
 import 'package:amar_taka/core/theme/app_text_styles.dart';
+import 'package:amar_taka/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:amar_taka/features/auth/presentation/bloc/auth_event.dart';
+import 'package:amar_taka/features/auth/presentation/bloc/auth_state.dart';
 import 'package:amar_taka/features/auth/presentation/widgets/social_login_btn.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -82,13 +86,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     if (_formKey.currentState!.validate()) {
-      // Handle sign up logic
-      print('Name: ${_nameController.text}');
-      print('Email: ${_emailController.text}');
-      print('Password: ${_passwordController.text}');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Sign up logic goes here')));
+      context.read<AuthBloc>().add(
+            SignupEvent(
+              userName: _nameController.text,
+              email: _emailController.text,
+              password: _passwordController.text,
+            ),
+          );
     }
   }
 
@@ -103,163 +107,161 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Form(
             key: _formKey,
             child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-                  // Title
-                  const Text(
-                    'Create your account',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-
-                  const SizedBox(height: 32),
-
-                  // Name Field
-                  AppTextField(
-                    label: 'Name',
-                    placeholder: 'ex: jon smith',
-                    controller: _nameController,
-                    validator: _validateName,
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Email Field
-                  AppTextField(
-                    label: 'Email',
-                    placeholder: 'ex: jon.smith@email.com',
-                    controller: _emailController,
-                    validator: _validateEmail,
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Password Field
-                  AppTextField(
-                    label: 'Password',
-                    placeholder: '••••••••••',
-                    isPassword: true,
-                    controller: _passwordController,
-                    validator: _validatePassword,
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Confirm Password Field
-                  AppTextField(
-                    label: 'Confirm password',
-                    placeholder: '••••••••••',
-                    isPassword: true,
-                    controller: _confirmPasswordController,
-                    validator: _validateConfirmPassword,
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Terms & Policy Checkbox
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: Checkbox(
-                          value: _isTermsAccepted,
-                          onChanged: (value) {
-                            setState(() {
-                              _isTermsAccepted = value ?? false;
-                            });
-                          },
-                          activeColor: AppPallete.primaryColor,
-                          side: BorderSide(color: Colors.grey[400]!),
-                        ),
+              child: BlocConsumer<AuthBloc, AuthState>(
+                
+                listener: (context, state) {
+                  if (state is AuthUnauthenticated) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Signup Successful'),
+                        backgroundColor: Colors.green,
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            const Text(
-                              'I understood the ',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                // Handle terms & policy tap
-                                print('Terms & policy tapped');
-                              },
-                              child: const Text(
-                                'terms & policy.',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                    );
+                    context.go('/signin');
+                  } else if (state is AuthError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.message),
+                        backgroundColor: Colors.red,
                       ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 32),
-
-                  // Sign Up Button Placeholder
-                  AppButton(
-                    btnText: "SIGN UP",
-                    onBtnPressed: () => _handleSignUp(),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Or sign up with
-                  Center(
-                    child: Text(
-                      'or sign up with',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 16),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Social Login Buttons
-                  const SocialLoginButtons(),
-                  const SizedBox(height: 20),
-                  // Sign In Link
-                  Row(
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'Have an account? ',
-                        style: AppTextStyle.bodyMedium.copyWith(
-                          color: AppPallete.darkGray,
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Create your account',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          context.push("/signin");
-                        },
-                        child: Text(
-                          'SIGN IN',
-                          style: AppTextStyle.bodyMedium.copyWith(
-                            color: AppPallete.primaryColor,
+                      const SizedBox(height: 32),
+                      AppTextField(
+                        label: 'Name',
+                        placeholder: 'ex: jon smith',
+                        controller: _nameController,
+                        validator: _validateName,
+                      ),
+                      const SizedBox(height: 20),
+                      AppTextField(
+                        label: 'Email',
+                        placeholder: 'ex: jon.smith@email.com',
+                        controller: _emailController,
+                        validator: _validateEmail,
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                      const SizedBox(height: 20),
+                      AppTextField(
+                        label: 'Password',
+                        placeholder: '••••••••••',
+                        isPassword: true,
+                        controller: _passwordController,
+                        validator: _validatePassword,
+                      ),
+                      const SizedBox(height: 20),
+                      AppTextField(
+                        label: 'Confirm password',
+                        placeholder: '••••••••••',
+                        isPassword: true,
+                        controller: _confirmPasswordController,
+                        validator: _validateConfirmPassword,
+                      ),
+                      const SizedBox(height: 24),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: Checkbox(
+                              value: _isTermsAccepted,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isTermsAccepted = value ?? false;
+                                });
+                              },
+                              activeColor: AppPallete.primaryColor,
+                              side: BorderSide(color: Colors.grey[400]!),
+                            ),
                           ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Row(
+                              children: [
+                                const Text(
+                                  'I understood the ',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    print('Terms & policy tapped');
+                                  },
+                                  child: const Text(
+                                    'terms & policy.',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 32),
+                      if (state is AuthLoading)
+                        const Center(child: CircularProgressIndicator())
+                      else
+                        AppButton(
+                          btnText: "SIGN UP",
+                          onBtnPressed: () => _handleSignUp(),
+                        ),
+                      const SizedBox(height: 24),
+                      Center(
+                        child: Text(
+                          'or sign up with',
+                          style: TextStyle(color: Colors.grey[600], fontSize: 16),
                         ),
                       ),
+                      const SizedBox(height: 20),
+                      const SocialLoginButtons(),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Have an account? ',
+                            style: AppTextStyle.bodyMedium.copyWith(
+                              color: AppPallete.darkGray,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              context.push("/signin");
+                            },
+                            child: Text(
+                              'SIGN IN',
+                              style: AppTextStyle.bodyMedium.copyWith(
+                                color: AppPallete.primaryColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 40),
                     ],
-                  ),
-
-                  const SizedBox(height: 40),
-                ],
+                  );
+                },
               ),
             ),
           ),
