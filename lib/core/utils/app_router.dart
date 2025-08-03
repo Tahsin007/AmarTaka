@@ -1,4 +1,5 @@
 import 'package:amar_taka/core/common/scaffold_with_bottom_nav.dart';
+import 'package:amar_taka/features/add/presentation/pages/add_income.dart';
 import 'package:amar_taka/features/add/presentation/pages/add_page.dart';
 import 'package:amar_taka/features/auth/presentation/pages/login.dart';
 import 'package:amar_taka/features/auth/presentation/pages/onbaording.dart';
@@ -16,10 +17,7 @@ class AppRouter {
     return GoRouter(
       initialLocation: initialRoute,
       routes: [
-        GoRoute(
-          path: '/',
-          builder: (context, state) => SplashScreen(),
-        ),
+        GoRoute(path: '/', builder: (context, state) => SplashScreen()),
         StatefulShellRoute.indexedStack(
           builder: (context, state, navigationShell) {
             return ScaffoldWithBottomNavBar(
@@ -39,8 +37,7 @@ class AppRouter {
                 GoRoute(
                   path: '/home',
                   name: "home",
-                  builder: (context, state) =>
-                      const MyHomePage(title: "Home"),
+                  builder: (context, state) => const MyHomePage(title: "Home"),
                 ),
               ],
             ),
@@ -58,7 +55,7 @@ class AppRouter {
                 GoRoute(
                   path: '/add',
                   name: "add",
-                  builder: (context, state) => const AddPage(),
+                  builder: (context, state) => const AddTransaction(),
                 ),
               ],
             ),
@@ -97,8 +94,12 @@ class AppRouter {
           name: "signup",
           builder: (context, state) => SignUpScreen(),
         ),
+        GoRoute(
+          path: '/add-income',
+          name: "add-income",
+          builder: (context, state) => AddIncomePage(),
+        ),
       ],
     );
   }
 }
-
