@@ -2,6 +2,7 @@ import 'package:amar_taka/features/auth/presentation/pages/login.dart';
 import 'package:amar_taka/features/auth/presentation/pages/onbaording.dart';
 import 'package:amar_taka/features/auth/presentation/pages/signup.dart';
 import 'package:amar_taka/features/auth/presentation/pages/splash_screen.dart';
+import 'package:amar_taka/features/home/presentation/pages/home.dart';
 import 'package:amar_taka/main.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,7 +18,7 @@ class AppRouter {
         GoRoute(
           path: '/home',
           name: "home",
-          builder: (context, state) => MyHomePage(title: "AmarTaka"),
+          builder: (context, state) => MyHomePage(title: "Home"),
         ),
         GoRoute(
           path: '/onboard',

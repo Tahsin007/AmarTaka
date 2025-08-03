@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppPallete {
   static const Color primaryColor = Color(0xFF7D31FA);
-  static const Color secondaryColor = Color(0xFF03DAC6);
+  static const Color secondaryColor = Color(0xFFFF6938);
   static const Color backgroundColor = Color(0xFFF5F5F5);
   static const Color gradient1 = Color(0xFF527EE7);
   static const Color gradient2 = Color(0xFFB06ACD);
