@@ -9,5 +9,5 @@ abstract class CategoryRepository {
 
   Future<Either<Failure,void>> updateCategory(String categoryId, CategoryEntity updatedData);
 
-  Future<Either<Failure,void>> deleteCategory(String categoryId);
+  Future<Either<Failure,void>> deleteCategory(int categoryId);
 }

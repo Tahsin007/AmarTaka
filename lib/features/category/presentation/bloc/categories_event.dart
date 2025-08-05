@@ -19,4 +19,9 @@ class AddCategoryEvent extends CategoriesEvent {
   List<Object> get props => [name];
 }
 
+class DeleteCategoryEvent extends CategoriesEvent{
+  final int id;
+  const DeleteCategoryEvent({required this.id});
+}
+
 

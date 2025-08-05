@@ -22,9 +22,13 @@ class CategoryRepositoryImpl implements CategoryRepository{
 
   @override
 
-  Future<Either<Failure, void>> deleteCategory(String categoryId) {
-    // TODO: implement deleteCategory
-    throw UnimplementedError();
+  Future<Either<Failure, void>> deleteCategory(int categoryId)async {
+    try{
+      await categoryRemoteDataSources.deleteCategory(categoryId);
+      return Right(null);
+    }catch(e){
+      return Left(Failure(e.toString()));
+    }
   }
 
   @override

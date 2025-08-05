@@ -12,7 +12,7 @@ abstract class CategoryRemoteDatasources {
 
   Future<void> updateCategory(String categoryId, CategoryModel updatedData);
 
-  Future<void> deleteCategory(String categoryId);
+  Future<void> deleteCategory(int categoryId);
 }
 
 class CategoryRemoteDatasourcesImpl implements CategoryRemoteDatasources {
@@ -88,8 +88,27 @@ class CategoryRemoteDatasourcesImpl implements CategoryRemoteDatasources {
   }
 
   @override
-  Future<void> deleteCategory(String categoryId) {
-    // TODO: implement deleteCategory
-    throw UnimplementedError();
+  Future<void> deleteCategory(int categoryId) async {
+    print("CategoryId from the api calling page: $categoryId");
+    final url = Uri.parse('${AppConstants.apiBaseUrl}/categories/$categoryId');
+    try {
+      final response = await client.delete(
+        url,
+        headers: {
+          'Authorization': 'Bearer ${await authRemoteDataSources.getToken()}',
+        },
+      );
+      print("Response from the api calling : ${response.body}");
+
+      if (response.statusCode == 200) {
+        return;
+      } else {
+        print("Delete api status code : ${response.statusCode}");
+        throw Exception('Failed to delete categories: ${response.body}');
+      }
+    } catch (e) {
+      print("From Delete Category : ${e.toString()}");
+      throw Exception('Failed to delete categories: ${e.toString()}');
+    }
   }
 }

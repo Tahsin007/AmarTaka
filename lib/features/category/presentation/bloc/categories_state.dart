@@ -29,3 +29,4 @@ class CategoriesLoaded extends CategoriesState {
   List<Object> get props => [categories];
 }
 
+class CategoryDeleted extends CategoriesState{}

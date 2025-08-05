@@ -1,5 +1,6 @@
 import 'package:amar_taka/core/common/app_primary_button.dart';
 import 'package:amar_taka/core/common/app_text_field.dart';
+import 'package:amar_taka/core/theme/app_pallete.dart';
 import 'package:amar_taka/core/theme/app_text_styles.dart';
 import 'package:amar_taka/features/category/presentation/bloc/categories_bloc.dart';
 import 'package:amar_taka/features/transaction/domain/entity/transaction_entity.dart';
@@ -78,7 +79,10 @@ class _AddIncomePageState extends State<AddIncomePage> {
               onPressed: () {
                 if (categoryController.text.isNotEmpty) {
                   context.read<CategoriesBloc>().add(
-                    AddCategoryEvent(name: categoryController.text,type: "INCOME"),
+                    AddCategoryEvent(
+                      name: categoryController.text,
+                      type: "INCOME",
+                    ),
                   );
                   Navigator.pop(context);
                 }
@@ -133,20 +137,35 @@ class _AddIncomePageState extends State<AddIncomePage> {
                               return Center(child: CircularProgressIndicator());
                             }
                             if (state is CategoriesLoaded) {
-                              return ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: state.categories.length,
-                                clipBehavior: Clip.none,
-                                itemBuilder: (context, index) {
-                                  final category = state.categories[index];
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: Chip(
-                                      label: Text(category.name),
-                                      labelPadding: EdgeInsets.all(8),
+                              return Wrap(
+                                spacing:
+                                    8.0, // space between chips horizontally
+                                runSpacing: 8.0, // space between lines
+                                children: state.categories.map((category) {
+                                  return Chip(
+                                    label: Text(category.name),
+                                    backgroundColor: AppPallete.primaryColor,
+                                    labelStyle: AppTextStyle.bodySmall.copyWith(
+                                      color: AppPallete.backgroundColor,
                                     ),
+                                    labelPadding: EdgeInsets.all(8),
+                                    deleteIcon: Icon(
+                                      Icons.cancel,
+                                      color: AppPallete.lightGray,
+                                    ),
+                                    onDeleted: () {
+                                      context.read<CategoriesBloc>().add(
+                                        DeleteCategoryEvent(
+                                          id: category.id ?? 1,
+                                        ),
+                                      );
+
+                                      context.read<CategoriesBloc>().add(
+                                        GetAllCategoriesEvent()
+                                      );
+                                    },
                                   );
-                                },
+                                }).toList(),
                               );
                             }
                             return Container();
@@ -160,7 +179,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 100),
 
                 BlocListener<TransactionBloc, TransactionState>(
                   listener: (context, state) {
@@ -189,6 +208,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
                       if (state is TransactionLoading) {
                         return Center(child: CircularProgressIndicator());
                       }
+
                       return AppButton(
                         btnText: "Add Income",
                         onBtnPressed: () => _handleBtnClick(),
