@@ -4,6 +4,8 @@ import 'package:amar_taka/features/auth/domain/repositories/auth_repository.dart
 import 'package:amar_taka/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:amar_taka/features/auth/presentation/bloc/auth_event.dart';
 import 'package:amar_taka/features/auth/presentation/bloc/auth_state.dart';
+import 'package:amar_taka/features/category/presentation/bloc/categories_bloc.dart';
+import 'package:amar_taka/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:amar_taka/init_dependencies.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,9 +21,22 @@ Future<void> main() async {
   runApp(MyApp(initialRoute: token != null ? '/home' : '/'));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final String initialRoute;
   const MyApp({super.key, required this.initialRoute});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late final GoRouter _router;
+
+  @override
+  void initState() {
+    super.initState();
+    _router = AppRouter.createRouter(widget.initialRoute);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,18 +45,27 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => sl<AuthBloc>(),
         ),
-      ],
-      child: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is AuthUnauthenticated) {
-            AppRouter.createRouter(initialRoute).go('/signin');
-          }
-        },
-        child: MaterialApp.router(
-          title: 'Flutter Demo',
-          theme: AppTheme.lightTheme,
-          routerConfig: AppRouter.createRouter(initialRoute),
+        BlocProvider(
+          create: (context) => sl<CategoriesBloc>(),
         ),
+        BlocProvider(
+          create: (context) => sl<TransactionBloc>(),
+        ),
+      ],
+      child: MaterialApp.router(
+        title: 'Flutter Demo',
+        theme: AppTheme.lightTheme,
+        routerConfig: _router,
+        builder: (context, child) {
+          return BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state is AuthUnauthenticated) {
+                _router.go('/signin');
+              }
+            },
+            child: child,
+          );
+        },
       ),
     );
   }

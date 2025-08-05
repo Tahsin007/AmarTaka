@@ -1,10 +1,10 @@
 class CategoryEntity{
-  final String id;
+  final int? id;
   final String name;
   final String type;
 
   CategoryEntity({
-    required this.id,
+    this.id,
     required this.name,
     required this.type,
   });

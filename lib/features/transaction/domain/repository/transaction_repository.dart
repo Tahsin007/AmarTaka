@@ -1,11 +1,14 @@
-abstract class TransactionRepository {
-  Future<void> addTransaction(Map<String, dynamic> transactionData);
-  
-  Future<List<Map<String, dynamic>>> getTransactions();
-  
-  Future<void> updateTransaction(String transactionId, Map<String, dynamic> updatedData);
-  
-  Future<void> deleteTransaction(String transactionId);
+import 'package:amar_taka/core/error/failure.dart';
+import 'package:amar_taka/features/transaction/domain/entity/transaction_entity.dart';
+import 'package:fpdart/fpdart.dart';
 
-  
+abstract class TransactionRepository {
+  Future<Either<Failure, void>> addTransaction(TransactionEntity transactionData);
+
+  Future<Either<Failure, List<TransactionEntity>>> getTransactions();
+
+  Future<Either<Failure, void>> updateTransaction(String transactionId, TransactionEntity updatedData);
+
+  Future<Either<Failure, void>> deleteTransaction(String transactionId);
+
 }

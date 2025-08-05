@@ -6,6 +6,18 @@ import 'package:amar_taka/features/auth/domain/usecases/login.dart';
 import 'package:amar_taka/features/auth/domain/usecases/logout.dart';
 import 'package:amar_taka/features/auth/domain/usecases/signup.dart';
 import 'package:amar_taka/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:amar_taka/features/category/data/category_repository_impl.dart';
+import 'package:amar_taka/features/category/data/datasources/category_remote_datasources.dart';
+import 'package:amar_taka/features/category/domain/repository/category_repository.dart';
+import 'package:amar_taka/features/category/domain/usecases/add_category.dart';
+import 'package:amar_taka/features/category/domain/usecases/get_categories.dart';
+import 'package:amar_taka/features/category/presentation/bloc/categories_bloc.dart';
+import 'package:amar_taka/features/transaction/data/datasources/transaction_remote_datasources.dart';
+import 'package:amar_taka/features/transaction/data/transaction_repo_impl.dart';
+import 'package:amar_taka/features/transaction/domain/repository/transaction_repository.dart';
+import 'package:amar_taka/features/transaction/domain/usecases/add_transaction.dart';
+import 'package:amar_taka/features/transaction/domain/usecases/get_transaction.dart';
+import 'package:amar_taka/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -31,7 +43,9 @@ Future<void> initDependencies() async {
   );
 
   _initAuth();
+  _initCategory();
   _initHome();
+  _initTransaction();
 
 }
 
@@ -56,6 +70,48 @@ void _initAuth(){
 
   sl.registerLazySingleton<AuthRemoteDataSources>(
     () => AuthRemoteDataSourceImpl(client: sl(), sharedPreferences: sl()),
+  );
+}
+
+void _initCategory() {
+  sl.registerFactory<CategoriesBloc>(
+    () => CategoriesBloc(getCategoriesUseCase: sl(), addCategoryUseCase: sl()),
+  );
+
+  sl.registerLazySingleton<GetCategoriesUseCase>(
+    () => GetCategoriesUseCase(sl()),
+  );
+  sl.registerLazySingleton<AddCategoryUseCase>(
+    () => AddCategoryUseCase(sl()),
+  );
+
+  sl.registerLazySingleton<CategoryRepository>(
+    () => CategoryRepositoryImpl(sl()),
+  );
+
+  sl.registerLazySingleton<CategoryRemoteDatasources>(
+    () => CategoryRemoteDatasourcesImpl(sl(),sl()),
+  );
+}
+
+void _initTransaction() {
+  sl.registerFactory<TransactionBloc>(
+    () => TransactionBloc( sl(), sl()),
+  );
+
+  sl.registerLazySingleton<GetTransactionUseCase>(
+    () => GetTransactionUseCase(sl()),
+  );
+  sl.registerLazySingleton<AddTransactionUseCase>(
+    () => AddTransactionUseCase(sl()),
+  );
+
+  sl.registerLazySingleton<TransactionRepository>(
+    () => TransactionRepoImpl(sl()),
+  );
+
+  sl.registerLazySingleton<TransactionRemoteDatasources>(
+    () => TransactionRemoteDatasourcesImpl(sl(),sl()),
   );
 }
 

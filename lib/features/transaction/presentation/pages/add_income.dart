@@ -1,8 +1,13 @@
 import 'package:amar_taka/core/common/app_primary_button.dart';
 import 'package:amar_taka/core/common/app_text_field.dart';
 import 'package:amar_taka/core/theme/app_text_styles.dart';
+import 'package:amar_taka/features/category/presentation/bloc/categories_bloc.dart';
+import 'package:amar_taka/features/transaction/domain/entity/transaction_entity.dart';
+import 'package:amar_taka/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:amar_taka/features/transaction/presentation/widgets/app_calender.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class AddIncomePage extends StatefulWidget {
   const AddIncomePage({super.key});
@@ -32,13 +37,58 @@ class _AddIncomePageState extends State<AddIncomePage> {
 
   void _handleBtnClick() {
     if (_formKey.currentState!.validate()) {
-      // context.read<AuthBloc>().add(
-      //   LoginEvent(
-      //     userName: _userNameController.text,
-      //     password: _passwordController.text,
-      //   ),
-      // );
+      context.read<TransactionBloc>().add(
+        AddTransactionEvent(
+          TransactionEntity(
+            double.tryParse(_amountController.text) ?? 0,
+            _incomeTitleController.text,
+            "INCOME",
+            DateTime.now().toIso8601String().split('T').first,
+            3,
+          ),
+        ),
+      );
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<CategoriesBloc>().add(GetAllCategoriesEvent());
+  }
+
+  void _showAddCategoryDialog() {
+    final categoryController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Add Category"),
+          content: AppTextField(
+            label: "Category Name",
+            placeholder: "e.g. Salary",
+            controller: categoryController,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                if (categoryController.text.isNotEmpty) {
+                  context.read<CategoriesBloc>().add(
+                    AddCategoryEvent(name: categoryController.text,type: "INCOME"),
+                  );
+                  Navigator.pop(context);
+                }
+              },
+              child: Text("Add"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -77,34 +127,74 @@ class _AddIncomePageState extends State<AddIncomePage> {
                     Expanded(
                       child: SizedBox(
                         height: 50,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 2,
-                          clipBehavior: Clip.none,
-                          
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: Chip(
-                                label: Text("Chip $index"),
-                                labelPadding: EdgeInsets.all(8),
-                              ),
-                            );
+                        child: BlocBuilder<CategoriesBloc, CategoriesState>(
+                          builder: (context, state) {
+                            if (state is CategoriesLoading) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                            if (state is CategoriesLoaded) {
+                              return ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: state.categories.length,
+                                clipBehavior: Clip.none,
+                                itemBuilder: (context, index) {
+                                  final category = state.categories[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: Chip(
+                                      label: Text(category.name),
+                                      labelPadding: EdgeInsets.all(8),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                            return Container();
                           },
-
                         ),
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: _showAddCategoryDialog,
                       icon: Icon(Icons.add, size: 40),
                     ),
                   ],
                 ),
                 SizedBox(height: 20),
-                AppButton(
-                  btnText: "Add Income",
-                  onBtnPressed: () => _handleBtnClick(),
+
+                BlocListener<TransactionBloc, TransactionState>(
+                  listener: (context, state) {
+                    if (state is TransactionAdded) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Transaction added successfully!"),
+                        ),
+                      );
+                      _incomeTitleController.clear();
+                      _amountController.clear();
+                      context.pop();
+                      // Optionally navigate back
+                      // context.pop();
+                    } else if (state is TransactionError) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.message),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
+                  child: BlocBuilder<TransactionBloc, TransactionState>(
+                    builder: (context, state) {
+                      if (state is TransactionLoading) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      return AppButton(
+                        btnText: "Add Income",
+                        onBtnPressed: () => _handleBtnClick(),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
@@ -112,5 +202,14 @@ class _AddIncomePageState extends State<AddIncomePage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _incomeTitleController.dispose();
+    _amountController.dispose();
+    context.read<CategoriesBloc>().close();
+    context.read<TransactionBloc>().close();
   }
 }
