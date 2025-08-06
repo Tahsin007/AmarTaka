@@ -25,12 +25,16 @@ class _AppCalendarState extends State<AppCalendar> {
           _focusedDay = focusedDay;
         });
       },
-      daysOfWeekStyle: DaysOfWeekStyle(
-        decoration: BoxDecoration(color: AppPallete.primaryColor),
-        weekdayStyle: AppTextStyle.bodySmall.copyWith(
-          color: AppPallete.backgroundColor,
+      calendarFormat: CalendarFormat.week,
+      availableCalendarFormats: const {CalendarFormat.week: 'Week'},
+      headerStyle: HeaderStyle(
+        titleCentered: true, // Center the month name
+        formatButtonVisible: false, // Hide the chip
+        titleTextStyle: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: AppPallete.primaryColor,
         ),
-        
       ),
       calendarStyle: const CalendarStyle(
         todayDecoration: BoxDecoration(

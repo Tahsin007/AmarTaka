@@ -1,7 +1,10 @@
+import 'package:amar_taka/core/common/app_loader.dart';
 import 'package:amar_taka/core/common/app_primary_button.dart';
 import 'package:amar_taka/core/theme/app_pallete.dart';
 import 'package:amar_taka/core/theme/app_text_styles.dart';
+import 'package:amar_taka/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AddTransaction extends StatefulWidget {
@@ -33,27 +36,45 @@ class _AddTransactionState extends State<AddTransaction> {
               SizedBox(height: 40),
               Text("Last Added", style: AppTextStyle.h2),
               SizedBox(height: 20),
-              ListView.builder(
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text("Transaction $index", style: AppTextStyle.h3),
-                    subtitle: Text(
-                      "Details of transaction $index",
-                      style: AppTextStyle.bodySmall,
-                    ),
-                    trailing: Text(
-                      "-${index * 100} Tk",
-                      style: AppTextStyle.bodyLarge,
-                    ),
-                    leading: CircleAvatar(
-                      backgroundColor: AppPallete.primaryColor,
-                      child: Icon(Icons.add_chart, color: AppPallete.white),
-                    ),
-                  );
+              BlocBuilder<TransactionBloc, TransactionState>(
+                builder: (context, state) {
+                  if (state is TransactionLoading) {
+                    return AppLoader();
+                  } else if (state is TransactionError) {
+                    return ErrorWidget(state.message);
+                  } else if (state is TransactionLoaded) {
+                    return ListView.builder(
+                      itemBuilder: (context, index) {
+                        final currentTransaction = state.transactions[index];
+                        return ListTile(
+                          title: Text(
+                            currentTransaction.description,
+                            style: AppTextStyle.h3,
+                          ),
+                          subtitle: Text(
+                            "Date : ${currentTransaction.date}",
+                            style: AppTextStyle.bodySmall,
+                          ),
+                          trailing: Text(
+                            "${currentTransaction.amount} Tk",
+                            style: AppTextStyle.bodyLarge,
+                          ),
+                          leading: CircleAvatar(
+                            backgroundColor: AppPallete.primaryColor,
+                            child: Icon(
+                              Icons.add_chart,
+                              color: AppPallete.white,
+                            ),
+                          ),
+                        );
+                      },
+                      itemCount: state.transactions.length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                    );
+                  }
+                  return Container();
                 },
-                itemCount: 10,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
               ),
             ],
           ),

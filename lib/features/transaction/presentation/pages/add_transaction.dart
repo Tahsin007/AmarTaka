@@ -102,7 +102,7 @@ class _AddTransactionDataState extends State<AddTransactionData>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppCalendar(),
-                  SizedBox(height: 20),
+                  SizedBox(height: 30),
                   AppTextField(
                     label: "Transaction Title",
                     placeholder: "Remote Job",
