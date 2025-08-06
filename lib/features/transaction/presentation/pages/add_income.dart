@@ -21,6 +21,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
   final _formKey = GlobalKey<FormState>();
   final _incomeTitleController = TextEditingController();
   final _amountController = TextEditingController();
+  int? _selectedCategoryId;
 
   String? validateTitle(String? value) {
     if (value == null || value.isEmpty) {
@@ -38,6 +39,12 @@ class _AddIncomePageState extends State<AddIncomePage> {
 
   void _handleBtnClick() {
     if (_formKey.currentState!.validate()) {
+          if (_selectedCategoryId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please select a category")),
+      );
+      return;
+    }
       context.read<TransactionBloc>().add(
         AddTransactionEvent(
           TransactionEntity(
@@ -45,7 +52,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
             _incomeTitleController.text,
             "INCOME",
             DateTime.now().toIso8601String().split('T').first,
-            3,
+            _selectedCategoryId??1,
           ),
         ),
       );
@@ -138,21 +145,26 @@ class _AddIncomePageState extends State<AddIncomePage> {
                             }
                             if (state is CategoriesLoaded) {
                               return Wrap(
-                                spacing:
-                                    8.0, // space between chips horizontally
-                                runSpacing: 8.0, // space between lines
+                                spacing: 8.0,
+                                runSpacing: 8.0,
                                 children: state.categories.map((category) {
-                                  return Chip(
+                                  return InputChip(
                                     label: Text(category.name),
+                                    selected:
+                                        _selectedCategoryId == category.id,
+                                    selectedColor: AppPallete
+                                        .secondaryColor, // highlight color
                                     backgroundColor: AppPallete.primaryColor,
                                     labelStyle: AppTextStyle.bodySmall.copyWith(
                                       color: AppPallete.backgroundColor,
                                     ),
-                                    labelPadding: EdgeInsets.all(8),
-                                    deleteIcon: Icon(
-                                      Icons.cancel,
-                                      color: AppPallete.lightGray,
-                                    ),
+                                    onSelected: (isSelected) {
+                                      setState(() {
+                                        _selectedCategoryId = isSelected
+                                            ? category.id
+                                            : null;
+                                      });
+                                    },
                                     onDeleted: () {
                                       context.read<CategoriesBloc>().add(
                                         DeleteCategoryEvent(
@@ -160,10 +172,22 @@ class _AddIncomePageState extends State<AddIncomePage> {
                                         ),
                                       );
 
+                                      // Refetch categories
                                       context.read<CategoriesBloc>().add(
-                                        GetAllCategoriesEvent()
+                                        GetAllCategoriesEvent(),
                                       );
+
+                                      // Deselect if it was the selected one
+                                      if (_selectedCategoryId == category.id) {
+                                        setState(() {
+                                          _selectedCategoryId = null;
+                                        });
+                                      }
                                     },
+                                    deleteIcon: Icon(
+                                      Icons.cancel,
+                                      color: AppPallete.lightGray,
+                                    ),
                                   );
                                 }).toList(),
                               );
@@ -229,7 +253,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
     super.dispose();
     _incomeTitleController.dispose();
     _amountController.dispose();
-    context.read<CategoriesBloc>().close();
-    context.read<TransactionBloc>().close();
+    // context.read<CategoriesBloc>().close();
+    // context.read<TransactionBloc>().close();
   }
 }

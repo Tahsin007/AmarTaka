@@ -11,26 +11,33 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final GetTransactionUseCase getTransactionUseCase;
   final AddTransactionUseCase addTransactionUseCase;
 
-  TransactionBloc(this.getTransactionUseCase, this.addTransactionUseCase) : super(TransactionInitial()) {
-    on<TransactionEvent>((event, emit) {
-      if (event is AddTransactionEvent) {
-        _onAddTransaction(event, emit);
-      } else if (event is GetTransactionEvent) {
-        _onGetTransactions(emit);
-      }
-      
-    });
+  TransactionBloc(this.getTransactionUseCase, this.addTransactionUseCase)
+    : super(TransactionInitial()) {
+      on<AddTransactionEvent>(_onAddTransaction);
+
   }
-  Future<void> _onAddTransaction(AddTransactionEvent event, Emitter<TransactionState> emit) async {
+  void _onAddTransaction(
+    AddTransactionEvent event,
+    Emitter<TransactionState> emit,
+  ) async {
     emit(TransactionLoading());
+    try{
     final result = await addTransactionUseCase(event.transactionData);
     result.fold(
-      (failure) => emit(TransactionError(failure.message)),
-      (_) => emit(TransactionAdded(event.transactionData)),
-      );
+      (failure) {
+        emit(TransactionError(failure.message));
+      },
+      (_) {
+        emit(TransactionAdded(event.transactionData));
+      },
+    );
+    }catch (e){
+      print("Error from the transaction bloc ${e.toString()}");
+    }
+
   }
 
-  Future<void> _onGetTransactions(Emitter<TransactionState> emit) async{
+  Future<void> _onGetTransactions(Emitter<TransactionState> emit) async {
     emit(TransactionLoading());
     final result = await getTransactionUseCase(NoParams());
     result.fold(

@@ -30,5 +30,8 @@ class TransactionModel extends TransactionEntity {
       'categoryId': categoryId.toInt(),
     };
   }
+  factory TransactionModel.fromEntity(TransactionEntity entity){
+    return TransactionModel(amount: entity.amount, description: entity.description, type: entity.type, date: entity.date, categoryId: entity.categoryId);
+  }
 
 }

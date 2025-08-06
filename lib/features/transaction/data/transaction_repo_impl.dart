@@ -11,7 +11,8 @@ class TransactionRepoImpl implements TransactionRepository{
   @override
   Future<Either<Failure, void>> addTransaction(TransactionEntity transactionData) async {
     try{
-      await transactionRemoteDataSources.addTransaction(transactionData as TransactionModel);
+      var transactionModel = TransactionModel.fromEntity(transactionData);
+      await transactionRemoteDataSources.addTransaction(transactionModel);
       return Right(null);
     }catch (e) {
       return Left(Failure('Failed to add transaction: $e'));

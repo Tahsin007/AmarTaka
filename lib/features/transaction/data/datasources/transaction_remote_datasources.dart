@@ -21,7 +21,14 @@ class TransactionRemoteDatasourcesImpl implements TransactionRemoteDatasources {
   @override
   Future<void> addTransaction(TransactionModel transactionData)async {
     try{
-      final url = Uri.parse("${AppConstants.apiBaseUrl}/transactions"); 
+      final url = Uri.parse("${AppConstants.apiBaseUrl}/transaction"); 
+      print("Transaction amount : ${transactionData.amount}");
+      print("Transaction amount : ${transactionData.description}");
+      print("Transaction amount : ${transactionData.type}");
+      print("Transaction amount : ${transactionData.date}");
+      print("Transaction amount : ${transactionData.categoryId}");
+
+
       final response = await httpClient.post(
         url,
         headers: {
@@ -29,17 +36,24 @@ class TransactionRemoteDatasourcesImpl implements TransactionRemoteDatasources {
           'Authorization': '${await authRemoteDataSources.getToken()}'
           // Add any necessary headers, e.g., authentication
         },
-        body: transactionData.toJson(),
+        body: jsonEncode({
+        "amount": transactionData.amount,
+        "type": transactionData.type,
+        "description": transactionData.description,
+        "date": transactionData.date,
+        "categoryId": transactionData.categoryId,
+      }),
       );
-
+      print("Transaction add response body :${response.body}");
       if (response.statusCode == 201) {
         print('Transaction added successfully');
+        return;
       } else {
         print('Failed to add transaction: ${response.statusCode}');
         throw Exception('Failed to add transaction: ${response.body}');
       }
     }catch (e) {
-      throw Exception('Failed to add transaction: $e');
+      throw Exception('Failed to add transaction: ${e.toString()}');
     }
   }
 
