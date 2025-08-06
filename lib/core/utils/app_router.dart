@@ -6,7 +6,7 @@ import 'package:amar_taka/features/auth/presentation/pages/onbaording.dart';
 import 'package:amar_taka/features/auth/presentation/pages/signup.dart';
 import 'package:amar_taka/features/auth/presentation/pages/splash_screen.dart';
 import 'package:amar_taka/features/home/presentation/pages/home.dart';
-import 'package:amar_taka/features/notifications/presentation/pages/notifications_page.dart';
+import 'package:amar_taka/features/budgets/presentation/pages/budgets_page.dart';
 import 'package:amar_taka/features/profile/presentation/pages/profile_page.dart';
 import 'package:amar_taka/features/search/presentation/pages/search_page.dart';
 import 'package:flutter/material.dart';
@@ -62,9 +62,9 @@ class AppRouter {
             StatefulShellBranch(
               routes: [
                 GoRoute(
-                  path: '/notifications',
-                  name: "notifications",
-                  builder: (context, state) => const NotificationsPage(),
+                  path: '/budgets',
+                  name: "budgets",
+                  builder: (context, state) => const BudgetsPage(),
                 ),
               ],
             ),

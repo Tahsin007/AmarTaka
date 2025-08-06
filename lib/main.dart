@@ -2,8 +2,8 @@ import 'package:amar_taka/core/theme/app_theme.dart';
 import 'package:amar_taka/core/utils/app_router.dart';
 import 'package:amar_taka/features/auth/domain/repositories/auth_repository.dart';
 import 'package:amar_taka/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:amar_taka/features/auth/presentation/bloc/auth_event.dart';
 import 'package:amar_taka/features/auth/presentation/bloc/auth_state.dart';
+import 'package:amar_taka/features/budgets/presentation/bloc/budget_bloc.dart';
 import 'package:amar_taka/features/category/presentation/bloc/categories_bloc.dart';
 import 'package:amar_taka/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:amar_taka/init_dependencies.dart';
@@ -50,6 +50,9 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider(
           create: (context) => sl<TransactionBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<BudgetBloc>(),
         ),
       ],
       child: MaterialApp.router(

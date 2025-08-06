@@ -6,6 +6,12 @@ import 'package:amar_taka/features/auth/domain/usecases/login.dart';
 import 'package:amar_taka/features/auth/domain/usecases/logout.dart';
 import 'package:amar_taka/features/auth/domain/usecases/signup.dart';
 import 'package:amar_taka/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:amar_taka/features/budgets/data/datasources/budget_remote_data_source.dart';
+import 'package:amar_taka/features/budgets/data/repositories/budget_repository_impl.dart';
+import 'package:amar_taka/features/budgets/domain/repositories/budget_repository.dart';
+import 'package:amar_taka/features/budgets/domain/usecases/add_budget.dart';
+import 'package:amar_taka/features/budgets/domain/usecases/get_all_budgets.dart';
+import 'package:amar_taka/features/budgets/presentation/bloc/budget_bloc.dart';
 import 'package:amar_taka/features/category/data/category_repository_impl.dart';
 import 'package:amar_taka/features/category/data/datasources/category_remote_datasources.dart';
 import 'package:amar_taka/features/category/domain/repository/category_repository.dart';
@@ -36,8 +42,8 @@ Future<void> initDependencies() async {
 
   _initAuth();
   _initCategory();
-  _initHome();
   _initTransaction();
+  _initBudget();
 }
 
 void _initAuth() {
@@ -103,8 +109,20 @@ void _initTransaction() {
   );
 }
 
-void _initHome() {
-  // sl.registerLazySingleton<HomeRemoteDataSource>(
-  //   () => HomeRemoteDataSourceImpl(client: sl(), networkInfo: sl()),
-  // );
+void _initBudget() {
+  sl.registerFactory<BudgetBloc>(
+    () => BudgetBloc(getAllBudgets: sl(), addBudget: sl()),
+  );
+
+  sl.registerLazySingleton<GetAllBudgets>(() => GetAllBudgets(sl()));
+  sl.registerLazySingleton<AddBudget>(() => AddBudget(sl()));
+
+  sl.registerLazySingleton<BudgetRepository>(
+    () => BudgetRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  sl.registerLazySingleton<BudgetRemoteDataSource>(
+    () => BudgetRemoteDataSourceImpl(client: sl(), authRemoteDataSources: sl()),
+  );
 }
+
