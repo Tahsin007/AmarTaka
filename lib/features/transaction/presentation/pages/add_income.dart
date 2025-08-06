@@ -72,10 +72,23 @@ class _AddIncomePageState extends State<AddIncomePage> {
       builder: (context) {
         return AlertDialog(
           title: Text("Add Category"),
-          content: AppTextField(
-            label: "Category Name",
-            placeholder: "e.g. Salary",
-            controller: categoryController,
+          content: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: 150,
+              maxWidth: 300
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AppTextField(
+                    label: "Category Name",
+                    placeholder: "e.g. Salary",
+                    controller: categoryController,
+                  ),
+                ],
+              ),
+            ),
           ),
           actions: [
             TextButton(
@@ -136,65 +149,39 @@ class _AddIncomePageState extends State<AddIncomePage> {
                 Row(
                   children: [
                     Expanded(
-                      child: SizedBox(
-                        height: 50,
-                        child: BlocBuilder<CategoriesBloc, CategoriesState>(
-                          builder: (context, state) {
-                            if (state is CategoriesLoading) {
-                              return Center(child: CircularProgressIndicator());
-                            }
-                            if (state is CategoriesLoaded) {
-                              return Wrap(
-                                spacing: 8.0,
-                                runSpacing: 8.0,
-                                children: state.categories.map((category) {
-                                  return InputChip(
-                                    label: Text(category.name),
-                                    selected:
-                                        _selectedCategoryId == category.id,
-                                    selectedColor: AppPallete
-                                        .secondaryColor, // highlight color
-                                    backgroundColor: AppPallete.primaryColor,
-                                    labelStyle: AppTextStyle.bodySmall.copyWith(
-                                      color: AppPallete.backgroundColor,
-                                    ),
-                                    onSelected: (isSelected) {
-                                      setState(() {
-                                        _selectedCategoryId = isSelected
-                                            ? category.id
-                                            : null;
-                                      });
-                                    },
-                                    onDeleted: () {
-                                      context.read<CategoriesBloc>().add(
-                                        DeleteCategoryEvent(
-                                          id: category.id ?? 1,
-                                        ),
-                                      );
-
-                                      // Refetch categories
-                                      context.read<CategoriesBloc>().add(
-                                        GetAllCategoriesEvent(),
-                                      );
-
-                                      // Deselect if it was the selected one
-                                      if (_selectedCategoryId == category.id) {
-                                        setState(() {
-                                          _selectedCategoryId = null;
-                                        });
-                                      }
-                                    },
-                                    deleteIcon: Icon(
-                                      Icons.cancel,
-                                      color: AppPallete.lightGray,
-                                    ),
-                                  );
-                                }).toList(),
-                              );
-                            }
-                            return Container();
-                          },
-                        ),
+                      child: BlocBuilder<CategoriesBloc, CategoriesState>(
+                        builder: (context, state) {
+                          if (state is CategoriesLoading) {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                          if (state is CategoriesLoaded) {
+                            return Wrap(
+                              spacing: 8.0,
+                              runSpacing: 8.0,
+                              children: state.categories.map((category) {
+                                return InputChip(
+                                  label: Text(category.name),
+                                  selected:
+                                      _selectedCategoryId == category.id,
+                                  selectedColor: AppPallete
+                                      .secondaryColor, // highlight color
+                                  backgroundColor: AppPallete.primaryColor,
+                                  labelStyle: AppTextStyle.bodySmall.copyWith(
+                                    color: AppPallete.backgroundColor,
+                                  ),
+                                  onSelected: (isSelected) {
+                                    setState(() {
+                                      _selectedCategoryId = isSelected
+                                          ? category.id
+                                          : null;
+                                    });
+                                  },
+                                );
+                              }).toList(),
+                            );
+                          }
+                          return Container();
+                        },
                       ),
                     ),
                     IconButton(
