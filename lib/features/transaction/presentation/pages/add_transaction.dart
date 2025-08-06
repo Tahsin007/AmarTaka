@@ -153,7 +153,7 @@ class _AddTransactionDataState extends State<AddTransactionData>
                               );
                             }
                             if (state is CategoriesError) {
-                              appSnackBar(context, state.message, false);
+                              return ErrorWidget(state.message);
                             }
                             return Container();
                           },

@@ -49,7 +49,7 @@ class TransactionRemoteDatasourcesImpl implements TransactionRemoteDatasources {
         print('Transaction added successfully');
         return;
       }else if(response.statusCode == 401){
-        await authRemoteDataSources.clearToken();
+        // await authRemoteDataSources.clearToken();
         throw Exception('Your Token Expired . Please Log Out');
       }else {
         print('Failed to add transaction: ${response.statusCode}');
@@ -63,23 +63,23 @@ class TransactionRemoteDatasourcesImpl implements TransactionRemoteDatasources {
   @override
   Future<List<TransactionModel>> getTransactions() async{
     try {
-      final url = Uri.parse("${AppConstants.apiBaseUrl}/transactions");
+      final url = Uri.parse("${AppConstants.apiBaseUrl}/transaction");
       return httpClient.get(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': '${await authRemoteDataSources.getToken()}'
       }).then((response) {
+        print(response.body);
         if (response.statusCode == 200) {
-          final List<dynamic> data = json.decode(response.body);
+          final List<dynamic> data = jsonDecode(response.body);
           return data.map((item) => TransactionModel.fromJson(item)).toList();
-        }else if(response.statusCode == 401){
-          authRemoteDataSources.clearToken();
-          throw Exception('Your Token Expired . Please Log Out');
-      }
+        }
          else {
+          print("From Get Transaction: ${response.body}");
           throw Exception('Failed to fetch transactions: ${response.body}');
         }
       });
     } catch (e) {
+      print(e.toString());
       throw Exception('Failed to fetch transactions: $e');
     }
   }

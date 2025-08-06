@@ -1,4 +1,5 @@
 import 'package:amar_taka/core/theme/app_pallete.dart';
+import 'package:amar_taka/core/theme/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -24,6 +25,13 @@ class _AppCalendarState extends State<AppCalendar> {
           _focusedDay = focusedDay;
         });
       },
+      daysOfWeekStyle: DaysOfWeekStyle(
+        decoration: BoxDecoration(color: AppPallete.primaryColor),
+        weekdayStyle: AppTextStyle.bodySmall.copyWith(
+          color: AppPallete.backgroundColor,
+        ),
+        
+      ),
       calendarStyle: const CalendarStyle(
         todayDecoration: BoxDecoration(
           color: AppPallete.primaryColor,

@@ -75,7 +75,7 @@ class CategoryRemoteDatasourcesImpl implements CategoryRemoteDatasources {
         print("Category Data : $data");
         return data;
       } else if(response.statusCode == 401){
-        await authRemoteDataSources.clearToken();
+        // await authRemoteDataSources.clearToken();
         throw Exception('Your Token Expired . Please Log Out');
       }
       else {

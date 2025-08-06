@@ -13,11 +13,11 @@ class TransactionModel extends TransactionEntity {
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     return TransactionModel(
-      amount: json['amount'] as double,
+      amount: json['amount'],
       description: json['description'] as String,
       type: json['type'] as String,
       date: json['date'] as String,
-      categoryId: json['categoryId'] as int,
+      categoryId: json['categoryId'] ?? 0,
     );
   }
 

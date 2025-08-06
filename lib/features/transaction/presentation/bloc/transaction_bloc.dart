@@ -14,6 +14,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   TransactionBloc(this.getTransactionUseCase, this.addTransactionUseCase)
     : super(TransactionInitial()) {
       on<AddTransactionEvent>(_onAddTransaction);
+      on<GetTransactionEvent>(_onGetTransactions);
 
   }
   void _onAddTransaction(
@@ -37,7 +38,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
   }
 
-  Future<void> _onGetTransactions(Emitter<TransactionState> emit) async {
+  void _onGetTransactions(GetTransactionEvent event,Emitter<TransactionState> emit) async {
     emit(TransactionLoading());
     final result = await getTransactionUseCase(NoParams());
     result.fold(

@@ -24,9 +24,9 @@ class _AddTransactionState extends State<AddTransaction> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppButton(
-                btnText: "Add Income",
+                btnText: "Add Transaction",
                 onBtnPressed: () {
-                  context.push("/add-income");
+                  context.push("/add-transaction");
                 },
               ),
 

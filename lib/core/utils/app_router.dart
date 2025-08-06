@@ -95,9 +95,9 @@ class AppRouter {
           builder: (context, state) => SignUpScreen(),
         ),
         GoRoute(
-          path: '/add-income',
-          name: "add-income",
-          builder: (context, state) => AddTransaction(),
+          path: '/add-transaction',
+          name: "add-transaction",
+          builder: (context, state) => AddTransactionData(),
         ),
       ],
     );
