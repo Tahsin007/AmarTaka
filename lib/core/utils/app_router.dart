@@ -1,5 +1,5 @@
 import 'package:amar_taka/core/common/scaffold_with_bottom_nav.dart';
-import 'package:amar_taka/features/transaction/presentation/pages/add_income.dart';
+import 'package:amar_taka/features/transaction/presentation/pages/add_transaction.dart';
 import 'package:amar_taka/features/transaction/presentation/pages/add_page.dart';
 import 'package:amar_taka/features/auth/presentation/pages/login.dart';
 import 'package:amar_taka/features/auth/presentation/pages/onbaording.dart';
@@ -97,7 +97,7 @@ class AppRouter {
         GoRoute(
           path: '/add-income',
           name: "add-income",
-          builder: (context, state) => AddIncomePage(),
+          builder: (context, state) => AddTransaction(),
         ),
       ],
     );

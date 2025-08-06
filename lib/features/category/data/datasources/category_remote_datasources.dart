@@ -54,12 +54,14 @@ class CategoryRemoteDatasourcesImpl implements CategoryRemoteDatasources {
     try {
       final url = Uri.parse(
         "${AppConstants.apiBaseUrl}/categories",
-      ); // Replace with your API endpoint
+      ); 
+      print("Get Categories endpoint : $url");
+      print("Jwt token : ${await authRemoteDataSources.getToken()}");
       final response = await client.get(
         url,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${await authRemoteDataSources.getToken()}',
+          'Authorization': '${await authRemoteDataSources.getToken()}',
         },
       );
       print("Raw body: ${response.body}");
@@ -72,12 +74,16 @@ class CategoryRemoteDatasourcesImpl implements CategoryRemoteDatasources {
         print("Get Category Response Code : ${response.statusCode} ");
         print("Category Data : $data");
         return data;
-      } else {
+      } else if(response.statusCode == 401){
+        await authRemoteDataSources.clearToken();
+        throw Exception('Your Token Expired . Please Log Out');
+      }
+      else {
         print('Failed to fetch categories: ${response.statusCode}');
         throw Exception('Failed to fetch categories: ${response.body}');
       }
     } catch (e) {
-      throw Exception('Failed to fetch categories: $e');
+      throw Exception(e.toString());
     }
   }
 

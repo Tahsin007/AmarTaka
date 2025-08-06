@@ -48,7 +48,10 @@ class TransactionRemoteDatasourcesImpl implements TransactionRemoteDatasources {
       if (response.statusCode == 201) {
         print('Transaction added successfully');
         return;
-      } else {
+      }else if(response.statusCode == 401){
+        await authRemoteDataSources.clearToken();
+        throw Exception('Your Token Expired . Please Log Out');
+      }else {
         print('Failed to add transaction: ${response.statusCode}');
         throw Exception('Failed to add transaction: ${response.body}');
       }
@@ -68,7 +71,11 @@ class TransactionRemoteDatasourcesImpl implements TransactionRemoteDatasources {
         if (response.statusCode == 200) {
           final List<dynamic> data = json.decode(response.body);
           return data.map((item) => TransactionModel.fromJson(item)).toList();
-        } else {
+        }else if(response.statusCode == 401){
+          authRemoteDataSources.clearToken();
+          throw Exception('Your Token Expired . Please Log Out');
+      }
+         else {
           throw Exception('Failed to fetch transactions: ${response.body}');
         }
       });

@@ -30,7 +30,7 @@ class _AppCalendarState extends State<AppCalendar> {
           shape: BoxShape.circle,
         ),
         selectedDecoration: BoxDecoration(
-          color: AppPallete.primaryColor,
+          color: AppPallete.secondaryColor,
           shape: BoxShape.circle,
         ),
       ),

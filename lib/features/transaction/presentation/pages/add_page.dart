@@ -1,3 +1,4 @@
+import 'package:amar_taka/core/common/app_primary_button.dart';
 import 'package:amar_taka/core/theme/app_pallete.dart';
 import 'package:amar_taka/core/theme/app_text_styles.dart';
 import 'package:flutter/material.dart';
@@ -22,54 +23,13 @@ class _AddTransactionState extends State<AddTransaction> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      context.push("/add-income");
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: const Color.fromARGB(255, 239, 250, 255),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(Icons.add_card, color: AppPallete.primaryColor),
-                          Text(
-                            "Add Income",
-                            style: AppTextStyle.bodyMedium.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: const Color.fromARGB(255, 244, 188, 195),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(Icons.add_card, color: AppPallete.secondaryColor),
-                        Text(
-                          "Add Income",
-                          style: AppTextStyle.bodyMedium.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              AppButton(
+                btnText: "Add Income",
+                onBtnPressed: () {
+                  context.push("/add-income");
+                },
               ),
+
               SizedBox(height: 40),
               Text("Last Added", style: AppTextStyle.h2),
               SizedBox(height: 20),
