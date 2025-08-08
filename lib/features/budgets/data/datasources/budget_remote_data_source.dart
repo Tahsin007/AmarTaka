@@ -18,8 +18,10 @@ class BudgetRemoteDataSourceImpl implements BudgetRemoteDataSource {
       {required this.client, required this.authRemoteDataSources});
 
   @override
+
   Future<List<BudgetModel>> getAllBudgets() async {
-    final token = await authRemoteDataSources.getToken();
+    try{
+          final token = await authRemoteDataSources.getToken();
 
     final response = await client.get(
       Uri.parse('${AppConstants.apiBaseUrl}/budget'),
@@ -28,6 +30,9 @@ class BudgetRemoteDataSourceImpl implements BudgetRemoteDataSource {
         'Authorization': 'Bearer $token',
       },
     );
+    print("GetAllBudget Response body :${response.body}");
+    print("Get All Budget Response status : ${response.statusCode}");
+
 
     if (response.statusCode == 200) {
       final budgets = json.decode(response.body) as List;
@@ -35,10 +40,15 @@ class BudgetRemoteDataSourceImpl implements BudgetRemoteDataSource {
     } else {
       throw ServerException(response.body);
     }
+    }catch (e){
+      print(e.toString());
+      throw Exception(e.toString());
+    }
   }
 
   @override
   Future<BudgetModel> addBudget(int month, int year, double amount) async {
+    try{
     final token = await authRemoteDataSources.getToken();
     final response = await client.post(
       Uri.parse('${AppConstants.apiBaseUrl}/budget'),
@@ -52,12 +62,18 @@ class BudgetRemoteDataSourceImpl implements BudgetRemoteDataSource {
         'amount': amount,
       }),
     );
-
+    print("Budget Response body :${response.body}");
     if (response.statusCode == 201) {
       return BudgetModel.fromJson(json.decode(response.body));
     } else {
+      print("Response status : ${response.statusCode}");
       throw ServerException(response.body);
     }
+    }catch (e){
+      print(e.toString());
+      throw Exception(e.toString());
+    }
+
   }
 }
 

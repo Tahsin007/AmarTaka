@@ -1,8 +1,12 @@
+import 'package:amar_taka/core/common/app_primary_button.dart';
+import 'package:amar_taka/core/theme/app_pallete.dart';
+import 'package:amar_taka/core/theme/app_text_styles.dart';
 import 'package:amar_taka/features/budgets/domain/budget_entity.dart';
 import 'package:amar_taka/features/budgets/presentation/bloc/budget_bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 
 class BudgetsPage extends StatefulWidget {
   const BudgetsPage({super.key});
@@ -50,19 +54,64 @@ class _BudgetsPageState extends State<BudgetsPage> {
   }
 
   Widget _buildBudgetView(dynamic budget) {
-    return Center(
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.account_balance_wallet,
-            size: 100,
-            color: Colors.green,
+          Lottie.asset(
+            'assets/animation/budget-animation.json',
+            width: 200,
+            height: 200,
+            fit: BoxFit.fill,
           ),
+          SizedBox(height: 20),
+          Text('Track Your Monthly Budget', style: AppTextStyle.h2),
           const SizedBox(height: 20),
-          Text(
-            'Budget for ${_getMonthName(DateTime.now().month)}: ${budget.amount}',
-            style: const TextStyle(fontSize: 24),
+          Text("Take control of your finances by tracking a monthly goal."),
+          SizedBox(height: 30),
+          Card(
+            elevation: 10,
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Your monthly budget for ${_getMonthName(DateTime.now().month)}",
+                    style: AppTextStyle.bodyMedium.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    "${budget.amount}",
+                    style: AppTextStyle.h1.copyWith(
+                      color: AppPallete.primaryColor,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  AppButton(
+                    btnText: "Edit Monthly Budget",
+                    onBtnPressed: () {
+                      // final amount = double.tryParse(amountController.text);
+                      final amount = 3000.00;
+                      if (amount != null) {
+                        context.read<BudgetBloc>().add(
+                          AddBudgetEvent(
+                            month: DateTime.now().month,
+                            year: DateTime.now().year,
+                            amount: amount,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -77,34 +126,67 @@ class _BudgetsPageState extends State<BudgetsPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
-            'No budget set for this month.',
-            style: TextStyle(fontSize: 18),
-          ),
-          const SizedBox(height: 20),
-          TextField(
-            controller: amountController,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Enter Budget Amount',
-              border: OutlineInputBorder(),
+          Container(
+            padding: EdgeInsets.all(30),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(60),
+              color: AppPallete.lightGray,
+            ),
+            child: Icon(
+              Icons.file_open,
+              color: AppPallete.primaryColor,
+              size: 50,
             ),
           ),
+          SizedBox(height: 20),
+          Text('Set Your Monthly Budget', style: AppTextStyle.h2),
           const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              final amount = double.tryParse(amountController.text);
-              if (amount != null) {
-                context.read<BudgetBloc>().add(
-                  AddBudgetEvent(
-                    month: DateTime.now().month,
-                    year: DateTime.now().year,
-                    amount: amount,
+          Text("Take control of your finances by setting a monthly goal."),
+          SizedBox(height: 30),
+          Card(
+            elevation: 10,
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Enter Montly Budget",
+                    style: AppTextStyle.bodyMedium.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.left,
                   ),
-                );
-              }
-            },
-            child: const Text('Add Budget'),
+                  SizedBox(height: 20),
+                  TextField(
+                    controller: amountController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: '0.00',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  AppButton(
+                    btnText: "Add Budget",
+                    onBtnPressed: () {
+                      final amount = double.tryParse(amountController.text);
+                      if (amount != null) {
+                        context.read<BudgetBloc>().add(
+                          AddBudgetEvent(
+                            month: DateTime.now().month,
+                            year: DateTime.now().year,
+                            amount: amount,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

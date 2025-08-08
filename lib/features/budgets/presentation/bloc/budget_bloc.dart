@@ -27,6 +27,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
 
     on<AddBudgetEvent>((event, emit) async {
       emit(BudgetLoading());
+      print("Budget request body: ${event.month} month, ${event.amount} amount, ${event.year} year");
       try {
         await addBudget(event.month, event.year, event.amount);
         emit(BudgetAdded());
