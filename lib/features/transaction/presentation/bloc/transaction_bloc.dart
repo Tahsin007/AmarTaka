@@ -1,4 +1,4 @@
-import 'package:amar_taka/features/auth/domain/usecases/logout.dart';
+import 'package:amar_taka/core/usecases/usecase.dart';
 import 'package:amar_taka/features/transaction/domain/entity/transaction_entity.dart';
 import 'package:amar_taka/features/transaction/domain/usecases/add_transaction.dart';
 import 'package:amar_taka/features/transaction/domain/usecases/get_transaction.dart';

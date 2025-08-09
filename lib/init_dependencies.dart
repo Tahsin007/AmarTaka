@@ -20,6 +20,18 @@ import 'package:amar_taka/features/category/domain/usecases/add_category.dart';
 import 'package:amar_taka/features/category/domain/usecases/delete_category.dart';
 import 'package:amar_taka/features/category/domain/usecases/get_categories.dart';
 import 'package:amar_taka/features/category/presentation/bloc/categories_bloc.dart';
+import 'package:amar_taka/features/recurring_transactions/data/datasources/recurring_transaction_remote_data_source.dart';
+import 'package:amar_taka/features/recurring_transactions/data/datasources/recurring_transaction_remote_data_source_impl.dart';
+import 'package:amar_taka/features/recurring_transactions/data/repositories/recurring_transaction_repository_impl.dart';
+import 'package:amar_taka/features/recurring_transactions/domain/repositories/recurring_transaction_repository.dart';
+import 'package:amar_taka/features/recurring_transactions/domain/usecases/create_recurring_transaction.dart';
+import 'package:amar_taka/features/recurring_transactions/domain/usecases/delete_recurring_transaction.dart';
+import 'package:amar_taka/features/recurring_transactions/domain/usecases/get_all_recurring_transactions.dart';
+import 'package:amar_taka/features/recurring_transactions/domain/usecases/get_overdue_transactions.dart';
+import 'package:amar_taka/features/recurring_transactions/domain/usecases/get_recurring_transaction_details.dart';
+import 'package:amar_taka/features/recurring_transactions/domain/usecases/get_upcoming_transactions.dart';
+import 'package:amar_taka/features/recurring_transactions/domain/usecases/update_recurring_transaction.dart';
+import 'package:amar_taka/features/recurring_transactions/presentation/bloc/recurring_transaction_bloc.dart';
 import 'package:amar_taka/features/transaction/data/datasources/transaction_remote_datasources.dart';
 import 'package:amar_taka/features/transaction/data/transaction_repo_impl.dart';
 import 'package:amar_taka/features/transaction/domain/repository/transaction_repository.dart';
@@ -45,6 +57,7 @@ Future<void> initDependencies() async {
   _initCategory();
   _initTransaction();
   _initBudget();
+  _initRecurringTransaction();
 }
 
 void _initAuth() {
@@ -126,6 +139,48 @@ void _initBudget() {
 
   sl.registerLazySingleton<BudgetRemoteDataSource>(
     () => BudgetRemoteDataSourceImpl(client: sl(), authRemoteDataSources: sl()),
+  );
+}
+
+void _initRecurringTransaction() {
+  sl.registerFactory<RecurringTransactionBloc>(
+    () => RecurringTransactionBloc(
+      createRecurringTransaction: sl(),
+      getAllRecurringTransactions: sl(),
+      getRecurringTransactionDetails: sl(),
+      updateRecurringTransaction: sl(),
+      deleteRecurringTransaction: sl(),
+      getUpcomingTransactions: sl(),
+      getOverdueTransactions: sl(),
+    ),
+  );
+
+  sl.registerLazySingleton<CreateRecurringTransaction>(
+      () => CreateRecurringTransaction(sl()));
+  sl.registerLazySingleton<GetAllRecurringTransactions>(
+      () => GetAllRecurringTransactions(sl()));
+  sl.registerLazySingleton<GetRecurringTransactionDetails>(
+      () => GetRecurringTransactionDetails(sl()));
+  sl.registerLazySingleton<UpdateRecurringTransaction>(
+      () => UpdateRecurringTransaction(sl()));
+  sl.registerLazySingleton<DeleteRecurringTransaction>(
+      () => DeleteRecurringTransaction(sl()));
+  sl.registerLazySingleton<GetUpcomingTransactions>(
+      () => GetUpcomingTransactions(sl()));
+  sl.registerLazySingleton<GetOverdueTransactions>(
+      () => GetOverdueTransactions(sl()));
+
+  sl.registerLazySingleton<RecurringTransactionRepository>(
+    () => RecurringTransactionRepositoryImpl(
+      remoteDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+
+  sl.registerLazySingleton<RecurringTransactionRemoteDataSource>(
+    () => RecurringTransactionRemoteDataSourceImpl(
+      client: sl(),auth: sl()
+    ),
   );
 }
 

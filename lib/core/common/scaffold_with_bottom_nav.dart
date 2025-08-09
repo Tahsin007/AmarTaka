@@ -22,7 +22,10 @@ class ScaffoldWithBottomNavBar extends StatelessWidget {
         onTap: onDestinationSelected,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.add_chart), label: 'Statistics'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_chart),
+            label: 'Recurring',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.add_rounded), label: 'Add'),
           BottomNavigationBarItem(
             icon: Icon(Icons.money_outlined),

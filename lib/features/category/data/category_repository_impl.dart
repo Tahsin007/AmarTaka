@@ -16,7 +16,7 @@ class CategoryRepositoryImpl implements CategoryRepository{
       await categoryRemoteDataSources.addCategory(categoryModel);
       return Right(null);
     } catch (e) {
-      return Left(Failure( e.toString()));
+      return Left(ServerFailure(message:  e.toString()));
     }
   }
 
@@ -27,7 +27,7 @@ class CategoryRepositoryImpl implements CategoryRepository{
       await categoryRemoteDataSources.deleteCategory(categoryId);
       return Right(null);
     }catch(e){
-      return Left(Failure(e.toString()));
+      return Left(ServerFailure(message:e.toString()));
     }
   }
 
@@ -37,7 +37,7 @@ class CategoryRepositoryImpl implements CategoryRepository{
       final response = await categoryRemoteDataSources.getCategories();
       return Right(response);
     }catch(e){
-      return Left(Failure(e.toString()));
+      return Left(ServerFailure(message:e.toString()));
     }
   }
 

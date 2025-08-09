@@ -15,7 +15,7 @@ class TransactionRepoImpl implements TransactionRepository{
       await transactionRemoteDataSources.addTransaction(transactionModel);
       return Right(null);
     }catch (e) {
-      return Left(Failure('Failed to add transaction: $e'));
+      return Left(ServerFailure(message: 'Failed to add transaction: $e'));
     }
   }
 
@@ -25,7 +25,7 @@ class TransactionRepoImpl implements TransactionRepository{
       await transactionRemoteDataSources.deleteTransaction(transactionId);
       return Right(null);
     }catch (e) {
-      return Left(Failure('Failed to delete transaction: $e'));
+      return Left(ServerFailure(message: 'Failed to delete transaction: $e'));
     }
   }
 
@@ -35,7 +35,7 @@ class TransactionRepoImpl implements TransactionRepository{
       final transactions = await transactionRemoteDataSources.getTransactions();
       return Right(transactions.map((e) => e as TransactionEntity).toList());
     } catch (e) {
-      return Left(Failure('Failed to fetch transactions: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch transactions: $e'));
     }
   }
 
@@ -45,7 +45,7 @@ class TransactionRepoImpl implements TransactionRepository{
       await transactionRemoteDataSources.updateTransaction(transactionId, updatedData as TransactionModel);
       return Right(null);
     } catch (e) {
-      return Left(Failure('Failed to update transaction: $e'));
+      return Left(ServerFailure(message: 'Failed to update transaction: $e'));
     }
   }
 

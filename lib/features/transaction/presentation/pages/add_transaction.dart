@@ -166,7 +166,7 @@ class _AddTransactionDataState extends State<AddTransactionData>
                   BlocListener<TransactionBloc, TransactionState>(
                     listener: (context, state) {
                       if (state is TransactionAdded) {
-                        appSnackBar(
+                        AppSnackBar.show(
                           context,
                           "Transaction Added Successfull",
                           true,
@@ -175,7 +175,7 @@ class _AddTransactionDataState extends State<AddTransactionData>
                         _amountController.clear();
                         context.pop();
                       } else if (state is TransactionError) {
-                        appSnackBar(context, state.message, false);
+                        AppSnackBar.show(context, state.message, false);
                       }
                     },
                     child: BlocBuilder<TransactionBloc, TransactionState>(

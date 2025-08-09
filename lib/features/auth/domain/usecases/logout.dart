@@ -14,5 +14,4 @@ class Logout implements UseCase<void, NoParams> {
   }
 }
 
-class NoParams {
-}
+

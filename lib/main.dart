@@ -5,6 +5,7 @@ import 'package:amar_taka/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:amar_taka/features/auth/presentation/bloc/auth_state.dart';
 import 'package:amar_taka/features/budgets/presentation/bloc/budget_bloc.dart';
 import 'package:amar_taka/features/category/presentation/bloc/categories_bloc.dart';
+import 'package:amar_taka/features/recurring_transactions/presentation/bloc/recurring_transaction_bloc.dart';
 import 'package:amar_taka/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:amar_taka/init_dependencies.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +54,9 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider(
           create: (context) => sl<BudgetBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<RecurringTransactionBloc>(),
         ),
       ],
       child: MaterialApp.router(

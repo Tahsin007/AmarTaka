@@ -20,12 +20,12 @@ class AuthRepositoryImpl implements AuthRepository {
         final token = await remoteDataSource.login(userName, password);
         return Right(token);
       } on ServerException {
-        return Left(Failure("Server Exception"));
+        return Left(Failure(message: "Server Exception"));
       }catch (e){
-        return Left(Failure(e.toString()));
+        return Left(Failure(message: e.toString()));
       }
     } else {
-      return Left(Failure("Internet is not connected"));
+      return Left(Failure( message:"Internet is not connected"));
     }
   }
 
@@ -36,12 +36,12 @@ class AuthRepositoryImpl implements AuthRepository {
         await remoteDataSource.signup(userName, email, password);
         return const Right(null);
       } on ServerException {
-        return Left(Failure("Server Exception"));
+        return Left(Failure(message: "Server Exception"));
       }catch (e){
-        return Left(Failure(e.toString()));
+        return Left(Failure(message:e.toString()));
       }
     } else {
-      return Left(Failure("Internet is not connected"));
+      return Left(Failure(message:"Internet is not connected"));
     }
   }
 
@@ -52,13 +52,13 @@ class AuthRepositoryImpl implements AuthRepository {
         await remoteDataSource.logout();
         return const Right(null);
       } on ServerException {
-        return Left(Failure("Server Exception"));
+        return Left(Failure(message:"Server Exception"));
       }catch(e){
-        return Left(Failure(e.toString()));
+        return Left(Failure(message:e.toString()));
 
       }
     } else {
-      return Left(Failure("Internet is not connected"));
+      return Left(Failure(message:"Internet is not connected"));
     }
   }
 
