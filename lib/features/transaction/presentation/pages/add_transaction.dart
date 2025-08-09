@@ -1,3 +1,4 @@
+import 'package:amar_taka/core/common/app_loader.dart';
 import 'package:amar_taka/core/common/app_primary_button.dart';
 import 'package:amar_taka/core/common/app_snackbar.dart';
 import 'package:amar_taka/core/common/app_text_field.dart';
@@ -125,7 +126,7 @@ class _AddTransactionDataState extends State<AddTransactionData>
                         child: BlocBuilder<CategoriesBloc, CategoriesState>(
                           builder: (context, state) {
                             if (state is CategoriesLoading) {
-                              return Center(child: CircularProgressIndicator());
+                              return Center(child: AppLoader());
                             }
                             if (state is CategoriesLoaded) {
                               return Wrap(
@@ -180,7 +181,7 @@ class _AddTransactionDataState extends State<AddTransactionData>
                     child: BlocBuilder<TransactionBloc, TransactionState>(
                       builder: (context, state) {
                         if (state is TransactionLoading) {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(child: AppLoader());
                         }
                         return AppButton(
                           btnText: _selectedTabIndex == 0

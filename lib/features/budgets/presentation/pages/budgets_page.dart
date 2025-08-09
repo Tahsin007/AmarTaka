@@ -1,3 +1,4 @@
+import 'package:amar_taka/core/common/app_loader.dart';
 import 'package:amar_taka/core/common/app_primary_button.dart';
 import 'package:amar_taka/core/theme/app_pallete.dart';
 import 'package:amar_taka/core/theme/app_text_styles.dart';
@@ -22,6 +23,63 @@ class _BudgetsPageState extends State<BudgetsPage> {
     context.read<BudgetBloc>().add(GetAllBudgetsEvent());
   }
 
+  void _showEditBudgetDialog(BuildContext context, BudgetEntity budget) {
+    final TextEditingController amountController = TextEditingController(
+      text: budget.amount.toString(),
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Edit Monthly Budget'),
+          content: TextField(
+            controller: amountController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: 'Enter new amount',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppPallete.primaryColor, // background color
+                foregroundColor: Colors.white, // text color
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ), // padding
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8), // rounded corners
+                ),
+              ),
+              onPressed: () {
+                final amount = double.tryParse(amountController.text);
+                if (amount != null) {
+                  context.read<BudgetBloc>().add(
+                    UpdateMonthlyBudgetEvent(
+                      id: budget.id ?? 0,
+                      month: DateTime.now().month,
+                      year: DateTime.now().year,
+                      amount: amount,
+                    ),
+                  );
+                  Navigator.of(context).pop();
+                }
+              },
+              child: const Text('Update'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +87,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
       body: BlocBuilder<BudgetBloc, BudgetState>(
         builder: (context, state) {
           if (state is BudgetLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: AppLoader());
           } else if (state is BudgetLoaded) {
             final currentMonth = DateTime.now().month;
             final currentYear = DateTime.now().year;
@@ -96,17 +154,8 @@ class _BudgetsPageState extends State<BudgetsPage> {
                   AppButton(
                     btnText: "Edit Monthly Budget",
                     onBtnPressed: () {
+                      _showEditBudgetDialog(context, budget);
                       // final amount = double.tryParse(amountController.text);
-                      final amount = 3000.00;
-                      if (amount != null) {
-                        context.read<BudgetBloc>().add(
-                          AddBudgetEvent(
-                            month: DateTime.now().month,
-                            year: DateTime.now().year,
-                            amount: amount,
-                          ),
-                        );
-                      }
                     },
                   ),
                 ],

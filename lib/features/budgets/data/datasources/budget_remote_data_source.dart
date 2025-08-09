@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 abstract class BudgetRemoteDataSource {
   Future<List<BudgetModel>> getAllBudgets();
   Future<BudgetModel> addBudget(int month, int year, double amount);
+  Future<BudgetModel> updateMonthlyBudget(BudgetModel updatedBudget);
 }
 
 class BudgetRemoteDataSourceImpl implements BudgetRemoteDataSource {
@@ -32,7 +33,6 @@ class BudgetRemoteDataSourceImpl implements BudgetRemoteDataSource {
     );
     print("GetAllBudget Response body :${response.body}");
     print("Get All Budget Response status : ${response.statusCode}");
-
 
     if (response.statusCode == 200) {
       final budgets = json.decode(response.body) as List;
@@ -74,6 +74,35 @@ class BudgetRemoteDataSourceImpl implements BudgetRemoteDataSource {
       throw Exception(e.toString());
     }
 
+  }
+  
+  @override
+  Future<BudgetModel> updateMonthlyBudget(BudgetModel updatedBudget) async{
+        try{
+    final token = await authRemoteDataSources.getToken();
+    final response = await client.put(
+      Uri.parse('${AppConstants.apiBaseUrl}/budget/${updatedBudget.id}'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({
+        'month': updatedBudget.month,
+        'year': updatedBudget.year,
+        'amount': updatedBudget.amount,
+      }),
+    );
+    print("Updated Budget Response body :${response.body}");
+    if (response.statusCode == 200) {
+      return BudgetModel.fromJson(json.decode(response.body));
+    } else {
+      print("Response status : ${response.statusCode}");
+      throw ServerException(response.body);
+    }
+    }catch (e){
+      print(e.toString());
+      throw Exception(e.toString());
+    }
   }
 }
 

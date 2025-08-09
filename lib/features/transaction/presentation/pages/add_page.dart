@@ -6,6 +6,7 @@ import 'package:amar_taka/features/transaction/presentation/bloc/transaction_blo
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 
 class AddTransaction extends StatefulWidget {
   const AddTransaction({super.key});
@@ -24,8 +25,14 @@ class _AddTransactionState extends State<AddTransaction> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Lottie.asset(
+                'assets/animation/transaction.json',
+                width: 100,
+                height: 100,
+                fit: BoxFit.fill,
+              ),
               AppButton(
                 btnText: "Add Transaction",
                 onBtnPressed: () {

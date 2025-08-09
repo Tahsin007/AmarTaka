@@ -5,10 +5,12 @@ class BudgetModel extends BudgetEntity {
     required int month,
     required int year,
     required double amount,
+    int? id
   }) : super(
           amount: amount,
           year: year,
           month: month,
+          id: id
         );
 
   factory BudgetModel.fromJson(Map<String, dynamic> json) {
@@ -16,6 +18,7 @@ class BudgetModel extends BudgetEntity {
       month: json['month'] as int,
       year: json['year'] as int,
       amount: (json['amount'] as num).toDouble(),
+      id: json['id'] as int
     );
   }
 

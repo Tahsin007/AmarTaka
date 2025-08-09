@@ -11,6 +11,7 @@ import 'package:amar_taka/features/budgets/data/repositories/budget_repository_i
 import 'package:amar_taka/features/budgets/domain/repositories/budget_repository.dart';
 import 'package:amar_taka/features/budgets/domain/usecases/add_budget.dart';
 import 'package:amar_taka/features/budgets/domain/usecases/get_all_budgets.dart';
+import 'package:amar_taka/features/budgets/domain/usecases/update_budget.dart';
 import 'package:amar_taka/features/budgets/presentation/bloc/budget_bloc.dart';
 import 'package:amar_taka/features/category/data/category_repository_impl.dart';
 import 'package:amar_taka/features/category/data/datasources/category_remote_datasources.dart';
@@ -111,11 +112,13 @@ void _initTransaction() {
 
 void _initBudget() {
   sl.registerFactory<BudgetBloc>(
-    () => BudgetBloc(getAllBudgets: sl(), addBudget: sl()),
+    () => BudgetBloc(getAllBudgets: sl(), addBudget: sl(),updateBudget: sl()),
   );
 
   sl.registerLazySingleton<GetAllBudgets>(() => GetAllBudgets(sl()));
   sl.registerLazySingleton<AddBudget>(() => AddBudget(sl()));
+  sl.registerLazySingleton<UpdateBudget>(() => UpdateBudget(sl()));
+
 
   sl.registerLazySingleton<BudgetRepository>(
     () => BudgetRepositoryImpl(remoteDataSource: sl()),
