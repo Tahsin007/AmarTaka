@@ -53,7 +53,10 @@ class _RecurringTransactionsPageState extends State<RecurringTransactionsPage> {
                   // Summary Cards Section
                   SummaryCardsRow(),
                   // Transactions List Section
-                  Expanded(child: TransactionsList(transactions: state.transactions)),
+                  Expanded(child: RefreshIndicator(onRefresh: () async {
+                      context.read<RecurringTransactionBloc>().add(GetAllRecurringTransactionsEvent());
+                      await Future.delayed(const Duration(milliseconds: 500));
+                  },child: TransactionsList(transactions: state.transactions))),
                 ],
               );
             } 
