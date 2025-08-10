@@ -30,7 +30,6 @@ class RecurringTransactionRemoteDataSourceImpl
       print("Request Body : ${json.encode(transaction.toJson())}");
       print("Response Status Code : ${response.statusCode}");
       print("Response body: ${response.body}");
-
       
       if (response.statusCode != 201) {
         throw ServerException();
