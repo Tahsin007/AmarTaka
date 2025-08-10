@@ -15,7 +15,21 @@ Amar Taka is a Flutter-based mobile application designed to help you manage your
 
 ## App Snapshots
 
-*(Placeholder for app screenshots)*
+<img width="270" height="600" alt="Screen1" src="https://github.com/user-attachments/assets/0f399827-6d8b-4cfc-a8fa-70fa9052790c" />
+
+<img width="270" height="600" alt="Screen2" src="https://github.com/user-attachments/assets/eb164941-1c73-4f0e-b905-62c18c907d4c" />
+
+<img width="270" height="600" alt="Screen3" src="https://github.com/user-attachments/assets/0be1f67d-9b30-4588-910b-1ac4469027df" />
+
+<img width="270" height="600" alt="Screen4" src="https://github.com/user-attachments/assets/ba300219-7a58-4b4a-ab51-ef0109c566c7" />
+
+<img width="270" height="600" alt="Screen5" src="https://github.com/user-attachments/assets/05a87ff0-8e3b-4a86-9de0-eb7b4dd75b6c" />
+
+<img width="270" height="600" alt="Screen6" src="https://github.com/user-attachments/assets/801b2b6f-7da9-4b9c-a9d7-a7b05854bb0e" />
+
+<img width="270" height="600" alt="Screen7" src="https://github.com/user-attachments/assets/79afe600-2e12-4ee7-b3d8-457d353c348a" />
+
+<img width="270" height="600" alt="Screen8" src="https://github.com/user-attachments/assets/d4796064-e3f8-4291-9896-aa4c4292c2b2" />
 
 ## Libraries and Packages Used
 
