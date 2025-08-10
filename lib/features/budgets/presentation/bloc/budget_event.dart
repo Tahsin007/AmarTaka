@@ -1,0 +1,40 @@
+part of 'budget_bloc.dart';
+
+abstract class BudgetEvent extends Equatable {
+  const BudgetEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
+class GetAllBudgetsEvent extends BudgetEvent {}
+
+class AddBudgetEvent extends BudgetEvent {
+  final int month;
+  final int year;
+  final double amount;
+
+  const AddBudgetEvent({
+    required this.month,
+    required this.year,
+    required this.amount,
+  });
+
+  @override
+  List<Object> get props => [month, year, amount];
+}
+
+class UpdateMonthlyBudgetEvent extends BudgetEvent {
+  final int id;
+  final int month;
+  final int year;
+  final double amount;
+
+  UpdateMonthlyBudgetEvent({
+    required this.id,
+    required this.month,
+    required this.year,
+    required this.amount,
+  });
+}
+
